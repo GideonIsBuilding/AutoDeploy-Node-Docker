@@ -36,7 +36,9 @@ jobs:
         DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
       run: |
         echo "Deploying to staging..."
-        ssh ubuntu@34.238.124.28 'cd ~ && git pull origin main && npm install && npm run build && pm2 restart app'
+        echo "$DEPLOY_KEY" > /tmp/deploy_key
+        chmod 600 /tmp/deploy_key
+        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@34.238.124.28 'cd ~ && git pull origin main && npm install && node index.js'
 
     - name: Deployment Status
       if: success()
