@@ -20,7 +20,7 @@ jobs:
         cache: 'npm'
     
     - name: Install Dependencies
-      run: npm install express
+      run: npm ci
     
     - name: Run tests
       run: npm test
@@ -34,11 +34,13 @@ jobs:
       if: success()
       env:
         DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
+        DEPLOY_HOST: ${{ secrets.STAGING_HOST }}
+        DEPLOY_USER: ${{ secrets.STAGING_USER }}
       run: |
         echo "Deploying to staging..."
         echo "$DEPLOY_KEY" > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
-        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@34.237.242.110 '
+        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST '
           cd ~;
           if [ ! -d "node-demo" ]; then
             git clone https://github.com/GideonIsBuilding/node-demo.git;
