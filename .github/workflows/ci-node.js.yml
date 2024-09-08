@@ -30,16 +30,16 @@ jobs:
         echo "No build script specified"
       if: always()
       
-    # - name: Deploy to Staging
-    #   if: success()
-    #   env:
-    #     DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
-    #   run: |
-    #     echo "Deploying to staging..."
-    #     echo "$DEPLOY_KEY" > /tmp/deploy_key
-    #     chmod 600 /tmp/deploy_key
-    #     ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@34.238.124.28 'cd ~ && git pull origin main && npm install && node index.js'
+    - name: Deploy to Staging
+      if: success()
+      env:
+        DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
+      run: |
+        echo "Deploying to staging..."
+        echo "$DEPLOY_KEY" > /tmp/deploy_key
+        chmod 600 /tmp/deploy_key
+        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@18.206.127.252 'cd ~ && git pull origin main && npm install && node index.js'
 
-    # - name: Deployment Status
-    #   if: success()
-    #   run: echo "Deployment to staging successful!"
+    - name: Deployment Status
+      if: success()
+      run: echo "Deployment to staging successful!"
