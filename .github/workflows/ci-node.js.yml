@@ -38,7 +38,18 @@ jobs:
         echo "Deploying to staging..."
         echo "$DEPLOY_KEY" > /tmp/deploy_key
         chmod 600 /tmp/deploy_key
-        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@34.237.242.110 'cd ~ && git clone https://github.com/GideonIsBuilding/node-demo.git && sudo apt update && sudo apt install -y nodejs && sudo apt install -y npm && npm install express && node /node-demo/index.js'
+        ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no ubuntu@34.237.242.110 '
+          cd ~;
+          if [ ! -d "node-demo" ]; then
+            git clone https://github.com/GideonIsBuilding/node-demo.git;
+          else
+            cd node-demo && git pull origin main;
+          fi;
+          sudo apt update && sudo apt install -y nodejs npm;
+          cd ~/node-demo;
+          npm install;
+          node index.js;
+        '
 
     - name: Deployment Status
       if: success()
